@@ -3,7 +3,7 @@
 Sets the font size of chat bubbles in World of Warcraft, including the speech bubbles NPCs use while questing and
 players' `/say` and `/yell` bubbles (they all share Blizzard's `ChatBubbleFont`).
 
-Retail only (Interface 120100).
+Retail (Interface 120100) and WoW: Forever (Interface 16001).
 
 ## Features
 
@@ -19,7 +19,7 @@ Slash commands: `/bubblefont` (options), `/bubblefont <size>` (set the size), `/
 ## Install
 
 Download `BubbleFont-<version>.zip` from the [latest release](../../releases/latest) and extract the `BubbleFont`
-folder into `World of Warcraft\_retail_\Interface\AddOns\`.
+folder into `World of Warcraft\_retail_\Interface\AddOns\` (for WoW: Forever, `_classic_beta_` instead of `_retail_`).
 
 An addon manager that installs from GitHub releases (e.g. WowUp: *Install from URL* with this repo's URL) can also
 install and update it, **but only if the repository is public**.
@@ -35,7 +35,7 @@ To update from the command line (works for a private repo, needs `gh auth login`
 - Test local changes: `.\scripts\install-local.ps1` copies the addon folder into `AddOns`, then `/reload`.
 - After a WoW patch: bump `## Interface:` in `BubbleFont/BubbleFont.toc`.
 - Release: `git tag v1.0.1 && git push --tags`. The [Release workflow](.github/workflows/release.yml) stamps the
-  version into the TOC, builds the zip (with a `release.json` so addon managers see it's a retail build), and
+  version into the TOC, builds the zip (with a `release.json` so addon managers see it's a retail and Forever build), and
   publishes the GitHub release.
 
 ## License
