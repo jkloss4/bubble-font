@@ -6,14 +6,14 @@
   Path to Interface\AddOns. Defaults to the retail install used on this machine.
 #>
 param(
-  [string]$Repo = "jkloss4/bubble-font",
+  [string]$Repo = "jkloss4/bubble-font-size",
   [string]$AddOnsPath = "C:\Games\Battle.net\Games\World of Warcraft\_retail_\Interface\AddOns"
 )
 $tmp = Join-Path $env:TEMP "bubble-font-update"
 if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
 New-Item -ItemType Directory -Path $tmp | Out-Null
 
-gh release download --repo $Repo --pattern "BubbleFont-*.zip" --dir $tmp
+gh release download --repo $Repo --pattern "BubbleFontSize-*.zip" --dir $tmp
 if ($LASTEXITCODE -ne 0) { throw "gh release download failed" }
 
 $zip = Get-ChildItem $tmp -Filter *.zip | Select-Object -First 1

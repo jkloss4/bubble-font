@@ -47,7 +47,7 @@ local function formatSize(size)
     return size .. " pt"
 end
 
-local page = Kit.NewPage("BubbleFont", { onDefaults = function() setSize(nil) end })
+local page = Kit.NewPage("Bubble Font Size", { onDefaults = function() setSize(nil) end })
 page:Header("Chat Bubbles")
 page:Slider("Font Size", MIN_SIZE, MAX_SIZE, 1, getSize, setSize, formatSize,
     "Font size of chat bubbles, including NPC speech and players' /say and /yell. Applies to bubbles shown after the change.")
@@ -62,10 +62,10 @@ SlashCmdList["BUBBLEFONT"] = function(msg)
     local size = tonumber(msg)
     if size then
         setSize(size)
-        print(("BubbleFont: chat bubble font size set to %d pt."):format(getSize()))
+        print(("Bubble Font Size: chat bubble font size set to %d pt."):format(getSize()))
     elseif msg == "reset" then
         setSize(nil)
-        print(("BubbleFont: chat bubble font size reset to the default (%d pt)."):format(defaultSize))
+        print(("Bubble Font Size: chat bubble font size reset to the default (%d pt)."):format(defaultSize))
     else
         Kit.Open(page)
     end

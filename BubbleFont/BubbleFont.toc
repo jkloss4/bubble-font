@@ -1,5 +1,5 @@
 ## Interface: 120100, 16001
-## Title: BubbleFont
+## Title: Bubble Font Size
 ## Notes: Adjust the font size of chat bubbles, including NPC speech bubbles.
 ## Version: 1.0.0
 ## Author: Jay Kloss

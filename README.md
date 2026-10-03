@@ -1,4 +1,4 @@
-# BubbleFont
+# Bubble Font Size
 
 Sets the font size of chat bubbles in World of Warcraft, including the speech bubbles NPCs use while questing and
 players' `/say` and `/yell` bubbles (they all share Blizzard's `ChatBubbleFont`).
