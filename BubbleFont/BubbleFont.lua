@@ -2,7 +2,7 @@
 -- which all draw with Blizzard's ChatBubbleFont font object. Bubbles size themselves to
 -- their text when they appear, so a change applies to every bubble shown afterward.
 
-local addonName = ...
+local addonName, ns = ...
 
 local MIN_SIZE = 6
 local MAX_SIZE = 24
@@ -37,37 +37,8 @@ local function getSize()
     return BubbleFontDB.size or defaultSize
 end
 
--- Options panel. Built only from this addon's own frames (a canvas category) rather than
--- Blizzard's pooled Settings controls, so it can't taint Blizzard's own settings pages.
-local panel = CreateFrame("Frame")
-panel:Hide() -- start hidden so OnShow fires when the Settings panel first displays it
-
-local title = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightHuge")
-title:SetPoint("TOPLEFT", 16, -16)
-title:SetText("BubbleFont")
-
-local intro = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-intro:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -12)
-intro:SetText("Font size of chat bubbles, including NPC speech. Applies to new bubbles.")
-
-local sizeLabel = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-sizeLabel:SetPoint("TOPLEFT", intro, "BOTTOMLEFT", 0, -24)
-sizeLabel:SetText("Font size")
-
--- Blizzard's own options-page slider (as used by ForeverQuestMark): a slider with built-in arrow
--- steppers at each end, which disable themselves at the minimum and maximum.
-local slider = CreateFrame("Frame", nil, panel, "MinimalSliderWithSteppersTemplate")
-slider:SetSize(250, 20)
-slider:SetPoint("LEFT", sizeLabel, "RIGHT", 12, 0)
-
-local valueText = panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-valueText:SetPoint("LEFT", slider, "RIGHT", 8, 0)
-
-local resetButton = CreateFrame("Button", nil, panel, "UIPanelButtonTemplate")
-resetButton:SetSize(140, 22)
-resetButton:SetPoint("TOPLEFT", sizeLabel, "BOTTOMLEFT", 0, -20)
-resetButton:SetText("Reset to default")
-resetButton:SetScript("OnClick", function() setSize(nil) end)
+-- Options page (Options > AddOns > BubbleFont), drawn in Blizzard's settings style by SettingsKit
+local Kit = ns.SettingsKit
 
 local function formatSize(size)
     if size == defaultSize then
@@ -76,28 +47,13 @@ local function formatSize(size)
     return size .. " pt"
 end
 
--- The template's value-changed callback also fires when the value is set from code, so
--- `syncing` marks those refreshes to avoid saving them back as if the user had moved it.
-local syncing = false
-slider:Init(defaultSize, MIN_SIZE, MAX_SIZE, MAX_SIZE - MIN_SIZE, {})
-slider:RegisterCallback(MinimalSliderWithSteppersMixin.Event.OnValueChanged, function(_, value)
-    value = math.floor(value + 0.5)
-    valueText:SetText(formatSize(value))
-    if not syncing then
-        setSize(value)
-    end
-end, panel)
+local page = Kit.NewPage("BubbleFont", { onDefaults = function() setSize(nil) end })
+page:Header("Chat Bubbles")
+page:Slider("Font Size", MIN_SIZE, MAX_SIZE, 1, getSize, setSize, formatSize,
+    "Font size of chat bubbles, including NPC speech and players' /say and /yell. Applies to bubbles shown after the change.")
+Kit.Register(page)
 
-refreshPanel = function()
-    syncing = true
-    slider:SetValue(getSize())
-    syncing = false
-    valueText:SetText(formatSize(getSize()))
-end
-panel:SetScript("OnShow", refreshPanel)
-
-local category = Settings.RegisterCanvasLayoutCategory(panel, "BubbleFont")
-Settings.RegisterAddOnCategory(category)
+refreshPanel = function() page:Refresh() end
 
 -- Slash command: /bubblefont <size>, /bubblefont reset, or /bubblefont to open the options.
 SLASH_BUBBLEFONT1 = "/bubblefont"
@@ -111,7 +67,7 @@ SlashCmdList["BUBBLEFONT"] = function(msg)
         setSize(nil)
         print(("BubbleFont: chat bubble font size reset to the default (%d pt)."):format(defaultSize))
     else
-        Settings.OpenToCategory(category:GetID())
+        Kit.Open(page)
     end
 end
 

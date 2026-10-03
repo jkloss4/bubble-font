@@ -17,4 +17,5 @@
 ## Category-zhTW: 使用者介面
 ## SavedVariables: BubbleFontDB
 
+SettingsKit.lua
 BubbleFont.lua
